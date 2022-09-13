@@ -19,7 +19,7 @@ class _BaseScreenState extends State<BaseScreen> {
         physics: const NeverScrollableScrollPhysics(),
         controller: _pageController,
         children: <Widget>[
-          const HomeScreen(),
+          HomeScreen(),
           Container(color: Colors.blue),
           Container(color: Colors.amber),
           Container(color: Colors.green),

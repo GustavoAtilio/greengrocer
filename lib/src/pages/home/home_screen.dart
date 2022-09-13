@@ -1,11 +1,24 @@
 import 'package:badges/badges.dart';
 import 'package:flutter/material.dart';
 
-class HomeScreen extends StatelessWidget {
-  const HomeScreen({Key? key}) : super(key: key);
+import '../../repositories/item_repository.dart';
+import 'components/category_title.dart';
+import 'components/item_title.dart';
+
+class HomeScreen extends StatefulWidget {
+  HomeScreen({Key? key}) : super(key: key);
+  final itemRepository = ItemRepository();
 
   @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  @override
   Widget build(BuildContext context) {
+    var items = widget.itemRepository.getItems();
+    List<String> list = ["Futas", "Graões", "Verduras", "Temperos", "Cereais"];
+    String selectCategory = "Futas";
     return Scaffold(
       backgroundColor: const Color.fromARGB(255, 221, 218, 210),
       //TODO: App Bar
@@ -51,9 +64,10 @@ class HomeScreen extends StatelessWidget {
           )
         ],
       ),
-      //TODO: Campo de pesquisa
+
       body: Column(
         children: <Widget>[
+          //TODO: Campo de pesquisa
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
             child: TextFormField(
@@ -78,6 +92,47 @@ class HomeScreen extends StatelessWidget {
                   ),
                 ),
               ),
+            ),
+          ),
+          //TODO: Categorias
+          Container(
+            padding: const EdgeInsets.only(left: 20),
+            height: 40,
+            child: ListView.separated(
+              scrollDirection: Axis.horizontal,
+              itemBuilder: (_, index) {
+                return CategoryTitle(
+                  onPressed: () {
+                    setState(() {
+                      debugPrint("select as category");
+                      selectCategory = list[index];
+                    });
+                  },
+                  category: list[index],
+                  isSelected: list[index] == selectCategory ? true : false,
+                );
+              },
+              separatorBuilder: (_, index) => const SizedBox(width: 10),
+              itemCount: list.length,
+            ),
+          ),
+          //TODO: Grid
+          Expanded(
+            child: GridView.builder(
+              padding: const EdgeInsets.fromLTRB(16, 0, 16, 16),
+              physics: const BouncingScrollPhysics(),
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 2,
+                mainAxisSpacing: 10,
+                crossAxisSpacing: 10,
+                childAspectRatio: 9 / 11.5,
+              ),
+              itemCount: items.length,
+              itemBuilder: (_, index) {
+                return ItemTitle(
+                  item: items[index],
+                );
+              },
             ),
           ),
         ],
