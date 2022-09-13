@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:greengrocer/src/models/item_model.dart';
 
 import '../../../utils/format_price_util.dart';
+import '../../product/product_screen.dart';
 
 class ItemTitle extends StatelessWidget {
   const ItemTitle({
@@ -15,48 +16,61 @@ class ItemTitle extends StatelessWidget {
   Widget build(BuildContext context) {
     return Stack(
       children: [
-        Card(
-          elevation: 1,
-          shadowColor: Colors.grey[300],
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(20),
-          ),
-          child: Padding(
-            padding: const EdgeInsets.all(12),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: <Widget>[
-                //Todo: Imagem
-                Expanded(child: Image.asset(item.imgUrl ?? "")),
-                //Todo: Nome
-                Text(
-                  item.itemName ?? "",
-                  style: const TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                //Todo: Preço - Unidade
-                Row(
-                  children: <Widget>[
-                    Text(
-                      priceToCurrency(item.price ?? 0.0),
-                      style: const TextStyle(
-                        fontWeight: FontWeight.bold,
-                        color: Colors.green,
-                      ),
+        GestureDetector(
+          onTap: () {
+            Navigator.of(context).push(MaterialPageRoute(
+                builder: (context) => ProductScreen(
+                      item: item,
+                    )));
+          },
+          child: Card(
+            elevation: 1,
+            shadowColor: Colors.grey[300],
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(20),
+            ),
+            child: Padding(
+              padding: const EdgeInsets.all(12),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: <Widget>[
+                  //Todo: Imagem
+                  Expanded(
+                    child: Hero(
+                      tag: item.imgUrl.toString(),
+                      child: Image.asset(item.imgUrl ?? ""),
                     ),
-                    Text(
-                      '/${item.unit}',
-                      style: TextStyle(
-                        color: Colors.green.shade500,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 12,
+                  ),
+                  //Todo: Nome
+                  Text(
+                    item.itemName ?? "",
+                    style: const TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  //Todo: Preço - Unidade
+                  Row(
+                    children: <Widget>[
+                      Text(
+                        priceToCurrency(item.price ?? 0.0),
+                        style: const TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: Colors.green,
+                        ),
                       ),
-                    )
-                  ],
-                ),
-              ],
+                      Text(
+                        '/${item.unit}',
+                        style: TextStyle(
+                          color: Colors.green.shade500,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 12,
+                        ),
+                      )
+                    ],
+                  ),
+                ],
+              ),
             ),
           ),
         ),
